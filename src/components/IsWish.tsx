@@ -46,7 +46,7 @@ export const IsWish = (Props: IsWishType) => {
 
     return (
 
-        <HeartIcon className={`w-7 h-7 text-primary cursor-pointer transition-all ease-in-out duration-200 active:opacity-0 active:scale-[4.0] ${setHeart() ? 'fill-primary' : ''}`} onClick={() => hanblerWishlist(Props.id)}/>
+        <HeartIcon className={`h-[30px] text-primary cursor-pointer transition-all ease-in-out duration-200 active:opacity-0 active:scale-[4.0] ${setHeart() ? 'fill-primary' : ''}`} onClick={() => hanblerWishlist(Props.id)}/>
 
     );
 

@@ -53,6 +53,12 @@ export type SelectQuantityType = {
 
 }
 
+export type ProductPriceType = {
+    product: ProductItem,
+    small: boolean
+}
+
+
 // A P I  T Y P E S 
 
 export type ImageTypeModel = {
@@ -82,7 +88,14 @@ export type ProductItem = {
     stock: number,
     freeDelivery: boolean,
     characteristics: string[],
-    discount: number
+    discount: number,
+    installment: number,
+    discountWithInstallment: boolean,
+    
+}
+
+export type ProductItemCart = ProductItem & {
+    amount: number
 }
 
 export type WishListProductType = {
@@ -112,4 +125,3 @@ export type CartListType = {
     idUser: string,
     product: CartListProductType[]
 }
-

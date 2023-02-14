@@ -22,6 +22,6 @@ export const RouterList = () => {
         {path: '/validateaccount', element: <ValidateAccount />},
         {path: '/wishlist', element: isLogin.status ? <WishList /> : <Signin />},
         {path: '/product/:id', element: <Product />},
-        {path: '/cart', element: <CartList />}
+        {path: '/cart', element: isLogin.status ? <CartList /> : <Signin />}
     ]);
 };

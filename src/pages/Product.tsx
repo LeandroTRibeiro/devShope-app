@@ -17,6 +17,7 @@ import { Footer } from "../components/Footer";
 import { Loader } from "../components/Loader";
 import { Rating } from "../components/Rating";
 import { SelectQuantity } from "../components/SelectQuantity";
+import { ProductPrice } from "../components/ProductPrices";
 
 export const Product = () => {
 
@@ -27,8 +28,8 @@ export const Product = () => {
     const [product, setProduct] = useState<ProductItem>();
     const [others, setOthers] = useState<ProductItem[]>([]);
 
-    const [quantity, setQuantity] = useState(0);
-    const [quantityInput, setQuantityInput] = useState(false);
+    const [amount, setAmount] = useState(0);
+    const [amountInput, setAmountInput] = useState(false);
     const [stockFail, setStockFail] = useState(false);
 
     const [url, setUrl] = useState('');
@@ -51,14 +52,19 @@ export const Product = () => {
         setAlt(alt);
     }
 
-    const handlerAddToCart = async (product: string, quantity: number) => {
+    const handlerAddToCart = async (product: string, amount: number, stock: number) => {
+
+        if(amount === 0) {
+            amount = 1;
+        }
 
         const token = getCookie();
 
         if(token) {
 
-            const response = await Api.addToCart(token, product);
-            dispatch(addToCart(product, quantity));
+            const response = await Api.addToCart(token, product, amount);
+
+            dispatch(addToCart({product, amount, stock}));
 
         } else {
             navigate('/');
@@ -68,39 +74,39 @@ export const Product = () => {
 
     const changeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         if(+e.target.value === 6) {
-            setQuantityInput(true);
-            setQuantity(0);
+            setAmountInput(true);
+            setAmount(0);
             return;
 
         } else {
-            setQuantityInput(false)
-            setQuantity(+e.target.value);
+            setAmountInput(false)
+            setAmount(+e.target.value);
         }
     }
 
     const changeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(product) {
             if(+e.target.value > product.stock) {
-                setQuantity(product.stock);
+                setAmount(product.stock);
             } else {
-                setQuantity(+e.target.value);
+                setAmount(+e.target.value);
             }
         }
     }
 
     const sumQuantity = () => {
-        if(quantity === product?.stock) {
+        if(amount === product?.stock) {
             return;
         } else {
-            setQuantity(quantity + 1);
+            setAmount(amount + 1);
         }
     }
 
     const lessQuantity = () => {
-        if(quantity === 0) {
+        if(amount === 0) {
             return;
         } else {
-            setQuantity(quantity - 1);
+            setAmount(amount - 1);
         }
     }
 
@@ -126,11 +132,7 @@ export const Product = () => {
                             ))}
                         </div>
                         <div className="col-start-1 col-end-5 p-2 flex flex-col gap-2">
-                            <div>
-                                <span><s>{Format.price(product.price)}</s></span>
-                                <div className="font-semibold text-3xl tracking-tight text-stone-800">{Format.discountPrice(product.price, product.discount)}<span className="text-green-500 text-base font-normal"> {product.discount}%OFF a vista!</span></div>
-                                <div className="text-sm text-green-500">ou em até 10x de {Format.installment(product.price, 10)}</div>
-                            </div>
+                            <ProductPrice product={product} small={false} />
                             {product.freeDelivery &&
                             
                                 <div className="flex gap-2">
@@ -145,12 +147,12 @@ export const Product = () => {
                                     <SelectQuantity stock={product.stock} onChange={changeSelect} />
                                 </>
                             }
-                            {quantityInput &&
+                            {amountInput &&
                                 <label className="input-group">
                                     <span className="btn btn-primary" onClick={lessQuantity}>-</span>
                                     <input
                                         type="number"
-                                        value={quantity <= 0 ? '' : quantity}
+                                        value={amount <= 0 ? '' : amount}
                                         placeholder={`${product.stock} disponíveis`}
                                         onChange={changeQuantity}
                                         className='w-full border-2 border-primary p-2 outline-none appearance-none	'
@@ -158,11 +160,11 @@ export const Product = () => {
                                     <span className="btn btn-primary" onClick={sumQuantity}>+</span>
                                 </label>
                             }
-                            <Button name={'Comprar agora'} onClick={() => console.log(quantity)} />
-                            <Button name={'Adicionar ao carrinho'} style={'bg-blue-300 text-primary'} onClick={() => handlerAddToCart(product._id, quantity)}/>
+                            <Button name={'Comprar agora'} onClick={() => console.log(amount)} />
+                            <Button name={'Adicionar ao carrinho'} style={'bg-blue-300 text-primary'} onClick={() => handlerAddToCart(product._id, amount, product.stock)}/>
                         </div>
                     </div>
-                    <div className="p-2">
+                    <div className="">
                         <div className="flex items-start p-2 gap-1">
                             <ArrowUpLeftIcon className="w-[25px] text-stone-800 mt-1"/>
                             <div className="text-stone-800 text-sm"><span className="text-primary">Devolução grátis.</span> Você tem 30 dias a partir da data de recebimento.</div>
@@ -194,11 +196,10 @@ export const Product = () => {
                                             className="rounded-md w-16"
                                         />
                                     </Link>
-                                    <div className=" flex-1 flex justify-between items-start">
-                                        <Link to={`/product/${item._id}`} className="">
+                                    <div className="flex-1 flex justify-between items-start">
+                                        <Link to={`/product/${item._id}`} className="leading-none">
                                             <h1 className="text-stone-800 text-sm">{item.title}</h1>
-                                            <p className="text-stone-800 text-base font-semibold">{Format.price(item.price)}</p>
-                                            <p className="text-green-500 text-xs">10x {Format.installment(item.price, 10)}</p>
+                                            <ProductPrice product={item} small={true}/>
                                             {item.freeDelivery &&
                                                 <p className="text-green-500 text-xs">Frete Grátis!</p>
                                             }

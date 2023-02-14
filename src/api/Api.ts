@@ -68,10 +68,11 @@ export const Api = {
 
         return response.data;
     },
-    addToCart: async (token: string ,product: string) => {
+    addToCart: async (token: string ,product: string, amount: number) => {
         const response = await axios.post(`${BASEAPI}/cart/add`, {
             token,
-            product
+            product,
+            amount
         });
 
         return response.data;
@@ -80,6 +81,21 @@ export const Api = {
         const response = await axios.post(`${BASEAPI}/cart/get`, {
             token
         });
+
+        return response.data;
+    },
+    getProductCart: async (token: string) => {
+        const response = await axios.post(`${BASEAPI}/cart/show/cartproducts`, {
+            token
+        });
+
+        return response.data;
+    },
+    deleteToCart: async (token: string, product: string) => {
+        const response = await axios.post(`${BASEAPI}/cart/del`, {
+            token,
+            product
+        })
 
         return response.data;
     }
