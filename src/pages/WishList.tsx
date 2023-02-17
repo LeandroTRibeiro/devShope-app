@@ -6,10 +6,11 @@ import { Loader } from "../components/Loader";
 import { getCookie } from "../helpers/Cookie";
 import { Format } from "../helpers/FormatPrice";
 import { ProductItem } from "../types/types";
-import { ArrowLongLeftIcon, FaceFrownIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowLongLeftIcon, FaceFrownIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch } from "react-redux";
 import { addWish } from '../redux/reducers/wishList';
 import { Button } from "../components/Button";
+import { ProductPrice } from "../components/ProductPrices";
 
 export const WishList = () => {
 
@@ -44,8 +45,6 @@ export const WishList = () => {
 
     const hanblerWishlist = async (wish: string) => {
 
-        setLoading(true);
-
         const token = getCookie();
 
         if(token) {
@@ -63,12 +62,9 @@ export const WishList = () => {
             })
 
             setProductsList(newList);
-        
-            setLoading(false);
+    
 
         } else {
-
-            setLoading(false);
             navigate('/signin');
         }
     }
@@ -100,14 +96,12 @@ export const WishList = () => {
                                             <div className=" flex-1 flex justify-between items-start">
                                                 <Link to={`/product/${item._id}`} className="">
                                                     <h1 className="text-stone-800 text-sm">{item.title}</h1>
-                                                    {/* <p className="text-stone-800 text-sm">{item.description}</p> */}
-                                                    <p className="text-stone-800 text-base font-semibold">{Format.price(item.price)}</p>
-                                                    <p className="text-green-500 text-xs">10x {Format.installment(item.price, 10)}</p>
+                                                    <ProductPrice product={item} small={true} />
                                                     {item.freeDelivery &&
                                                         <p className="text-green-500 text-xs">Frete Grátis!</p>
                                                     }
                                                 </Link>
-                                                <XMarkIcon className={`w-7 h-7 text-primary cursor-pointer transition-all ease-in-out duration-200 active:opacity-0 active:scale-[4.0]`}  onClick={() => hanblerWishlist(item._id)}/>
+                                                <TrashIcon className={`w-6 h-6 text-primary cursor-pointer transition-all ease-in-out duration-200 active:opacity-0 active:scale-[4.0]`}  onClick={() => hanblerWishlist(item._id)}/>
                                             </div>
                                         </div>
                                     ))}

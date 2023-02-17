@@ -14,6 +14,7 @@ import { IsWish } from "../components/IsWish";
 import { Format } from "../helpers/FormatPrice";
 
 import { ProductItem } from "../types/types";
+import { ProductPrice } from "../components/ProductPrices";
 
 export const Home = () => {
 
@@ -49,14 +50,13 @@ export const Home = () => {
                                     <img
                                         src={item.thumbnail.url}
                                         alt={item.title}
-                                        className="rounded-md w-16"
+                                        className="rounded-md w-24"
                                     />
                                 </Link>
-                                <div className=" flex-1 flex justify-between items-start">
-                                    <Link to={`/product/${item._id}`} className="">
+                                <div className="flex-1 flex justify-between items-start">
+                                    <Link to={`/product/${item._id}`} className="w-36 leading-none">
                                         <h1 className="text-stone-800 text-sm">{item.title}</h1>
-                                        <p className="text-stone-800 text-base font-semibold">{Format.price(item.price)}</p>
-                                        <p className="text-green-500 text-xs">10x {Format.installment(item.price, 10)}</p>
+                                        <ProductPrice product={item} small={true} />
                                         {item.freeDelivery &&
                                             <p className="text-green-500 text-xs">Frete Grátis!</p>
                                         }
