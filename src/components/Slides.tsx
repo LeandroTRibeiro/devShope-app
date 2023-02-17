@@ -6,8 +6,6 @@ import { Api } from '../api/Api';
 import { BannersType } from '../types/types';
 
 let count = 0;
-let time: number = 0;
-let inter: number = 0;
 
 export const Slides = () => {
 
@@ -17,6 +15,8 @@ export const Slides = () => {
     const [restart, setRestart] = useState(false);
 
     const testRef = useRef(document.createElement("div"));
+
+    const time = useRef(0);
 
     useEffect(() => {
         getBanners() 
@@ -29,7 +29,7 @@ export const Slides = () => {
         console.log('disparei o efect')
         if(count === 0 && banners.length > 0) {
             
-            if(time === 0 && inter === 0 ) {
+            if(time.current === 0 ) {
                 
                 console.log('nao entrei aqui')
                 banners.map((item) => {
@@ -45,14 +45,52 @@ export const Slides = () => {
             }
 
             console.log('entrei aqui')
-            slideScroll();
+
+            if(slides.length > 0 ) {
+                slides.map((item) => {
+                    time.current = setTimeout(() => {
+        
+        
+                        testRef.current.scrollTo(item, 0)
+                        console.log(item);
+        
+        
+                        if(item === 928) {
+        
+                            console.log('passei')
+                            restart ? setRestart(false) : setRestart(true);
+                        }
+        
+        
+                    }, timetmp());
+                });
+            }
+    
+            if(slideState.length > 0 ) {
+                slideState.map((item) => {
+                    time.current = setTimeout(() => {
+        
+        
+                        testRef.current.scrollTo(item, 0)
+                        console.log(item);
+        
+        
+                        if(item === 928) {
+        
+                            console.log('passei')
+                            restart ? setRestart(false) : setRestart(true);
+                        }
+        
+        
+                    }, timetmp());
+                });
+            }
 
         }
 
         return () => {
-            clearTimeout(time);
+            clearTimeout(time.current);
         }
-
     },[banners, restart]);
 
     const getBanners = async () => {
@@ -86,55 +124,8 @@ export const Slides = () => {
         }
     }
 
-
-    const slideScroll = () => {
-
-        if(slides.length > 0 ) {
-            slides.map((item) => {
-                time = setTimeout(() => {
-    
-    
-                    testRef.current.scrollTo(item, 0)
-                    console.log(item);
-    
-    
-                    if(item === 928) {
-    
-                        console.log('passei')
-                        restart ? setRestart(false) : setRestart(true);
-                    }
-    
-    
-                }, timetmp());
-            });
-        }
-
-        if(slideState.length > 0 ) {
-            slideState.map((item) => {
-                time = setTimeout(() => {
-    
-    
-                    testRef.current.scrollTo(item, 0)
-                    console.log(item);
-    
-    
-                    if(item === 928) {
-    
-                        console.log('passei')
-                        restart ? setRestart(false) : setRestart(true);
-                    }
-    
-    
-                }, timetmp());
-            });
-        }
-
-        
-    }
-
     const handlerPauseSlide = () => {
-        clearInterval(inter);
-        clearTimeout(time);
+        clearTimeout(time.current);
     }
 
     return (
