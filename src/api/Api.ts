@@ -95,7 +95,16 @@ export const Api = {
         const response = await axios.post(`${BASEAPI}/cart/del`, {
             token,
             product
-        })
+        });
+
+        return response.data;
+    },
+    getDeliveryPriceAndValue: async (product: string, zipCode?: string, token?: string) => {
+        const response = await axios.post(`${BASEAPI}/frete`, {
+            zipCode,
+            token,
+            product
+        });
 
         return response.data;
     }

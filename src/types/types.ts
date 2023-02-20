@@ -91,6 +91,14 @@ export type ProductItem = {
     discount: number,
     installment: number,
     discountWithInstallment: boolean,
+    cepOrigin: string,
+    weight: string,
+    format: string,
+    length: string,
+    height: string,
+    width: string,
+    deliveryService: string[],
+    diameter: string
     
 }
 

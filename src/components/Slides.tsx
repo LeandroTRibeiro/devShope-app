@@ -14,7 +14,7 @@ export const Slides = () => {
 
     const [restart, setRestart] = useState(false);
 
-    const testRef = useRef(document.createElement("div"));
+    const testRef = useRef<HTMLDivElement>(null);
 
     const time = useRef(0);
 
@@ -26,12 +26,10 @@ export const Slides = () => {
 
     useEffect(() => {
 
-        console.log('disparei o efect')
         if(count === 0 && banners.length > 0) {
             
             if(time.current === 0 ) {
                 
-                console.log('nao entrei aqui')
                 banners.map((item) => {
                     const slide = document.querySelector(`#${item.public_id}`);
                     const position = slide?.getBoundingClientRect();
@@ -44,20 +42,16 @@ export const Slides = () => {
         
             }
 
-            console.log('entrei aqui')
-
             if(slides.length > 0 ) {
                 slides.map((item) => {
                     time.current = setTimeout(() => {
         
-        
-                        testRef.current.scrollTo(item, 0)
-                        console.log(item);
-        
+                        if(testRef.current) {
+                            testRef.current.scrollTo(item, 0)
+                        }
         
                         if(item === 928) {
         
-                            console.log('passei')
                             restart ? setRestart(false) : setRestart(true);
                         }
         
@@ -70,14 +64,12 @@ export const Slides = () => {
                 slideState.map((item) => {
                     time.current = setTimeout(() => {
         
-        
-                        testRef.current.scrollTo(item, 0)
-                        console.log(item);
-        
+                        if(testRef.current) {
+                            testRef.current.scrollTo(item, 0)
+                        }
         
                         if(item === 928) {
         
-                            console.log('passei')
                             restart ? setRestart(false) : setRestart(true);
                         }
         
@@ -103,22 +95,18 @@ export const Slides = () => {
 
     const timetmp = () => {
         if(count === 0) {
-            console.log(count);
             count = 1;
             return 4000;
         }
         if(count === 1) {
-            console.log(count);
             count = 2;
             return 8000;
         }
         if(count === 2) {
-            console.log(count);
             count = 3;
             return 12000;
         }
         if(count === 3) {
-            console.log(count);
             count = 0;
             return 16000;
         }
