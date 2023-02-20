@@ -25,6 +25,8 @@ export const Product = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const isLogin = useAppSelector(state => state.isLogin.status);
+
     const [product, setProduct] = useState<ProductItem>();
     const [others, setOthers] = useState<ProductItem[]>([]);
 
@@ -39,12 +41,21 @@ export const Product = () => {
         getProduct();
     },[params.id])
 
+    useEffect(() => {
+        if(product) {
+            if(isLogin && !product.freeDelivery) {
+                getDeliveryPriceAndValue(product._id);
+            }
+        }
+    },[product])
+
     const getProduct = async () => {
 
         const response = await Api.getProduct(params.id as string);
 
         setProduct(response.product);
         setOthers(response.others);
+
     }
 
     const handlerChangeImage = (url: string, alt: string) => {
@@ -110,6 +121,12 @@ export const Product = () => {
         }
     }
 
+    const getDeliveryPriceAndValue = async (product: string, zipCode?: string) => {
+
+
+        
+    }
+
     if(product) {
         return (
             <>
@@ -140,6 +157,22 @@ export const Product = () => {
                                     <div className="font-semibold text-green-500">Frete Grátis!</div>
                                 </div>    
 
+                            }
+                            {!product.freeDelivery &&
+                                <>
+                                    {isLogin &&
+                                        <div>
+                                            <div>
+                                                Chegará até você em 
+                                            </div>
+                                        </div>
+                                    }
+                                    {!isLogin &&
+                                        <div>
+
+                                        </div>
+                                    }
+                                </>
                             }
                             {product.stock > 1 &&
                                 <>
@@ -217,6 +250,25 @@ export const Product = () => {
                                     <div className="flex-1 leading-4	">{item}</div>
                                 </li>
                             ))}
+                        </ul>
+                        <ul className="p-2 mt-2 border-t-2 flex flex-col gap-2">
+                            Dimensões:
+                            <li className="flex gap-2">
+                                <ClipboardDocumentCheckIcon className="text-primary w-4" />
+                                Altura: {product.height}cm
+                            </li>
+                            <li className="flex gap-2">
+                                <ClipboardDocumentCheckIcon className="text-primary w-4" />
+                                Largura: {product.width}cm
+                            </li>
+                            <li className="flex gap-2">
+                                <ClipboardDocumentCheckIcon className="text-primary w-4" />
+                                Comprimento: {product.length}cm
+                            </li>
+                            <li className="flex gap-2">
+                                <ClipboardDocumentCheckIcon className="text-primary w-4" />
+                                Peso: {product.weight}kg
+                            </li>
                         </ul>
                     </div>
                 </div>
