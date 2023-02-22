@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Api } from "../api/Api";
 import { Header } from "../components/Header";
-import { ProductItem } from "../types/types";
+import { DeliveryInfoType, DestinationType, ProductItem } from "../types/types";
 import { Format } from "../helpers/FormatPrice";
-import { ArrowUpLeftIcon, ClipboardDocumentCheckIcon, ShieldCheckIcon, TruckIcon } from "@heroicons/react/24/outline";
+import { ArrowUpLeftIcon, ClipboardDocumentCheckIcon, ExclamationCircleIcon, MapPinIcon, ShieldCheckIcon, TruckIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import { Button } from "../components/Button";
 import { getCookie } from "../helpers/Cookie";
@@ -18,6 +18,8 @@ import { Loader } from "../components/Loader";
 import { Rating } from "../components/Rating";
 import { SelectQuantity } from "../components/SelectQuantity";
 import { ProductPrice } from "../components/ProductPrices";
+import { Delivery } from "../helpers/DeliveryTime";
+import { Input } from "../components/Input";
 
 export const Product = () => {
 
@@ -29,10 +31,14 @@ export const Product = () => {
 
     const [product, setProduct] = useState<ProductItem>();
     const [others, setOthers] = useState<ProductItem[]>([]);
+    const [deliveryInfo, setDeliveryInfo] = useState<DeliveryInfoType[]>([]);
+    const [destination, setDestination] = useState<DestinationType>();
+
+    const [zipCode, setZipeCode] = useState('');
+    const [validZipCode, setValidZipCode] = useState(false);
 
     const [amount, setAmount] = useState(0);
     const [amountInput, setAmountInput] = useState(false);
-    const [stockFail, setStockFail] = useState(false);
 
     const [url, setUrl] = useState('');
     const [alt, setAlt] = useState('');
@@ -41,20 +47,16 @@ export const Product = () => {
         getProduct();
     },[params.id])
 
-    useEffect(() => {
-        if(product) {
-            if(isLogin && !product.freeDelivery) {
-                getDeliveryPriceAndValue(product._id);
-            }
-        }
-    },[product])
-
     const getProduct = async () => {
 
-        const response = await Api.getProduct(params.id as string);
+        const token = getCookie();
+
+        const response = await Api.getProduct(params.id as string, token);
 
         setProduct(response.product);
         setOthers(response.others);
+        setDeliveryInfo(response.delivery);
+        setDestination(response.destination);
 
     }
 
@@ -121,10 +123,25 @@ export const Product = () => {
         }
     }
 
-    const getDeliveryPriceAndValue = async (product: string, zipCode?: string) => {
+    const changeZipCode = (e: React.ChangeEvent<HTMLInputElement>) => {
 
+        setZipeCode(e.target.value.replace(/[^0-9,-]/g,''));
 
-        
+    }
+
+    const handlerDelivery = () => {
+
+        const regex = /[^0-9]/g;
+
+        const cleanZipCode = zipCode.replace(regex,'');
+
+        if(cleanZipCode.length > 8) {
+            setValidZipCode(true);
+        } else {
+            setValidZipCode(false);
+        }
+
+        console.log(cleanZipCode);
     }
 
     if(product) {
@@ -161,16 +178,40 @@ export const Product = () => {
                             {!product.freeDelivery &&
                                 <>
                                     {isLogin &&
-                                        <div>
-                                            <div>
-                                                Chegará até você em 
+                                        <div className="flex flex-col gap-2">
+                                            <div className="text-sm">
+                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[0].PrazoEntrega, deliveryInfo[0].EntregaSabado)} por apenas R$${deliveryInfo[0].Valor}`}
+                                            </div>  
+                                            ou
+                                            <div className="text-sm">
+                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[1].PrazoEntrega, deliveryInfo[1].EntregaSabado)} por apenas R$${deliveryInfo[1].Valor}`}
                                             </div>
+                                            <Link to='/' className="flex">
+                                                <MapPinIcon className="w-5 text-green-500"/>
+                                                <div className="text-green-500 text-sm">{`${destination?.zipCode} - Rua ${destination?.street}`}</div>
+                                            </Link>
                                         </div>
                                     }
                                     {!isLogin &&
-                                        <div>
-
-                                        </div>
+                                        <label className="flex flex-col gap-2">
+                                            <span className="text-sm">Verifique o valor do frete:</span>
+                                            <div className="input-group">
+                                                <input 
+                                                    type="text"
+                                                    placeholder="Digite o CEP"
+                                                    value={zipCode}
+                                                    className="w-full border-2 border-primary p-2 outline-none appearance-none"
+                                                    onChange={changeZipCode}
+                                                />
+                                                <span className="btn btn-primary" onClick={handlerDelivery}>OK</span>
+                                            </div>
+                                            {validZipCode &&
+                                                    <span className="flex gap-1 text-sm text-red-600">
+                                                        <ExclamationCircleIcon className="w-5"/>
+                                                        Digite um CEP valido!
+                                                    </span>
+                                            }
+                                        </label>
                                     }
                                 </>
                             }

@@ -102,6 +102,34 @@ export type ProductItem = {
     
 }
 
+export type DeliveryInfoType = {
+    Codigo: string,
+    Valor: string,
+    PrazoEntrega: string,
+    ValorSemAdicionais: string,
+    ValorMaoPropria: string,
+    ValorAvisoRecebimento: string,
+    ValorValorDeclarado: string,
+    EntregaDomiciliar: string,
+    EntregaSabado: string,
+    Erro: string
+}
+
+export type DestinationType = {
+    apartment: {
+        apartmentNumber: number,
+        block: string,
+        name: string,
+        isApartment: boolean
+    },
+    city: string,
+    country: string,
+    district: string,
+    number: number,
+    street: string,
+    zipCode: string
+}
+
 export type ProductItemCart = ProductItem & {
     amount: number
 }

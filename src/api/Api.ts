@@ -63,8 +63,10 @@ export const Api = {
 
         return response.data;
     },
-    getProduct: async (id: string) => {
-        const response = await axios.get(`${BASEAPI}/ad/${id}`);
+    getProduct: async (id: string, token?: string) => {
+        const response = await axios.post(`${BASEAPI}/ad/${id}`,{
+            token
+        });
 
         return response.data;
     },
