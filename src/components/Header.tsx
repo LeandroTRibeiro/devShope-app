@@ -12,7 +12,7 @@ export const Header = () => {
     const cartList = useAppSelector(state => state.cartList.cartList.product);
 
     return (
-        <div className="flex justify-between items-center h-12 bg-primary gap-1 overflow-hidden">
+        <div className="flex justify-around p-2 items-center h-12 bg-primary gap-1 overflow-hidden">
             <div className="ml-1">
                 <Menu />
             </div>

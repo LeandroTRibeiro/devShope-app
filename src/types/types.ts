@@ -22,7 +22,9 @@ export type PropsInput = {
 
 export type LoaderProps = {
 
-    bg?: string
+    bg?: string,
+    size?: number,
+    page?: string
 
 }
 
@@ -56,6 +58,10 @@ export type SelectQuantityType = {
 export type ProductPriceType = {
     product: ProductItem,
     small: boolean
+}
+
+export type DeliveryPriceCalculateType = {
+    product: string
 }
 
 

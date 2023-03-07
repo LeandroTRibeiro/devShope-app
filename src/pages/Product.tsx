@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Api } from "../api/Api";
 import { Header } from "../components/Header";
 import { DeliveryInfoType, DestinationType, ProductItem } from "../types/types";
-import { Format } from "../helpers/FormatPrice";
-import { ArrowUpLeftIcon, ClipboardDocumentCheckIcon, ExclamationCircleIcon, MapPinIcon, ShieldCheckIcon, TruckIcon } from "@heroicons/react/24/outline";
+import { ArrowUpLeftIcon, ClipboardDocumentCheckIcon, MapPinIcon, ShieldCheckIcon, TruckIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import { Button } from "../components/Button";
 import { getCookie } from "../helpers/Cookie";
@@ -20,6 +19,7 @@ import { SelectQuantity } from "../components/SelectQuantity";
 import { ProductPrice } from "../components/ProductPrices";
 import { Delivery } from "../helpers/DeliveryTime";
 import { Input } from "../components/Input";
+import { DeliveryPriceCalculate } from "../components/DeliveryPriceCalculate";
 
 export const Product = () => {
 
@@ -33,9 +33,6 @@ export const Product = () => {
     const [others, setOthers] = useState<ProductItem[]>([]);
     const [deliveryInfo, setDeliveryInfo] = useState<DeliveryInfoType[]>([]);
     const [destination, setDestination] = useState<DestinationType>();
-
-    const [zipCode, setZipeCode] = useState('');
-    const [validZipCode, setValidZipCode] = useState(false);
 
     const [amount, setAmount] = useState(0);
     const [amountInput, setAmountInput] = useState(false);
@@ -123,31 +120,10 @@ export const Product = () => {
         }
     }
 
-    const changeZipCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-        setZipeCode(e.target.value.replace(/[^0-9,-]/g,''));
-
-    }
-
-    const handlerDelivery = () => {
-
-        const regex = /[^0-9]/g;
-
-        const cleanZipCode = zipCode.replace(regex,'');
-
-        if(cleanZipCode.length > 8) {
-            setValidZipCode(true);
-        } else {
-            setValidZipCode(false);
-        }
-
-        console.log(cleanZipCode);
-    }
 
     if(product) {
         return (
             <>
-            <button onSubmit={}></button>
                 <Header />
                 <div className="bg-stone-100 flex flex-col overflow-x-hidden pb-5">
                     <div className="grid grid-cols-4 gap-2 p-2">
@@ -179,13 +155,13 @@ export const Product = () => {
                             {!product.freeDelivery &&
                                 <>
                                     {isLogin &&
-                                        <div className="flex flex-col gap-2">
-                                            <div className="text-sm">
-                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[0].PrazoEntrega, deliveryInfo[0].EntregaSabado)} por apenas R$${deliveryInfo[0].Valor}`}
+                                        <div className="flex flex-col gap-2 text-xs">
+                                            <div className="text-xs">
+                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[0].PrazoEntrega, deliveryInfo[0].EntregaSabado)} por R$${deliveryInfo[0].Valor}`}
                                             </div>  
                                             ou
-                                            <div className="text-sm">
-                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[1].PrazoEntrega, deliveryInfo[1].EntregaSabado)} por apenas R$${deliveryInfo[1].Valor}`}
+                                            <div className="text-xs">
+                                                {`Chegará até você ${Delivery.getTime(deliveryInfo[1].PrazoEntrega, deliveryInfo[1].EntregaSabado)} por R$${deliveryInfo[1].Valor}`}
                                             </div>
                                             <Link to='/' className="flex">
                                                 <MapPinIcon className="w-5 text-green-500"/>
@@ -194,25 +170,7 @@ export const Product = () => {
                                         </div>
                                     }
                                     {!isLogin &&
-                                        <label className="flex flex-col gap-2">
-                                            <span className="text-sm">Verifique o valor do frete:</span>
-                                            <div className="input-group">
-                                                <input 
-                                                    type="text"
-                                                    placeholder="Digite o CEP"
-                                                    value={zipCode}
-                                                    className="w-full border-2 border-primary p-2 outline-none appearance-none"
-                                                    onChange={changeZipCode}
-                                                />
-                                                <span className="btn btn-primary" onClick={handlerDelivery}>OK</span>
-                                            </div>
-                                            {validZipCode &&
-                                                    <span className="flex gap-1 text-sm text-red-600">
-                                                        <ExclamationCircleIcon className="w-5"/>
-                                                        Digite um CEP valido!
-                                                    </span>
-                                            }
-                                        </label>
+                                        <DeliveryPriceCalculate product={product._id}/>
                                     }
                                 </>
                             }

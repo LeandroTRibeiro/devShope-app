@@ -109,5 +109,12 @@ export const Api = {
         });
 
         return response.data;
+    },
+    getDeliveryInfo: async (zipCode: string, productId: string) => {
+        const response = await axios.post(`${BASEAPI}/delivery/price`, {
+            zipCode,
+            productId
+        });
+        return response.data;
     }
 };
