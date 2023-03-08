@@ -1,4 +1,23 @@
-// P R O P S 
+// P R O P S  T Y P E S
+
+export type LoaderProps = {
+
+    bg?: string,
+    size?: number,
+    page?: string
+    
+};
+
+export type ProductPriceProps = {
+    product: ProductItem,
+    small: boolean
+};
+
+export type IsWishProps = {
+
+    id: string
+
+};
 
 export type PropsButton = {
 
@@ -20,19 +39,7 @@ export type PropsInput = {
 
 };
 
-export type LoaderProps = {
 
-    bg?: string,
-    size?: number,
-    page?: string
-
-}
-
-export type IsWishType = {
-
-    id: string
-
-};
 
 export type ToShareType = {
 
@@ -55,22 +62,18 @@ export type SelectQuantityType = {
 
 }
 
-export type ProductPriceType = {
-    product: ProductItem,
-    small: boolean
-}
 
 export type DeliveryPriceCalculateType = {
     product: string
 }
 
+export type DontFreeDeliveryProps = {
+    deliveryInfo: DeliveryInfoType[],
+    destination?: DestinationType,
+    productId: string
+}
 
-// A P I  T Y P E S 
-
-export type ImageTypeModel = {
-    url: string,
-    public_id: string
-};
+// S T A T E S  T Y P E S 
 
 export type ProductItem = {
     _id: string
@@ -107,6 +110,19 @@ export type ProductItem = {
     diameter: string
     
 }
+
+export type BannersType = {
+    name: string,
+    url: string,
+    public_id: string,
+    dateCreated: Date
+}
+
+export type ImageTypeModel = {
+    url: string,
+    public_id: string
+};
+
 
 export type DeliveryInfoType = {
     Codigo: string,
@@ -150,12 +166,6 @@ export type WishListType = {
     product: WishListProductType[]
 }
 
-export type BannersType = {
-    name: string,
-    url: string,
-    public_id: string,
-    dateCreated: Date
-}
 
 export type CartListProductType = {
     idProduct: string,

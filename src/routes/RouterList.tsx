@@ -9,7 +9,7 @@ import { Signin } from '../pages/Signin';
 import { ValidateAccount } from '../pages/ValidateAccount';
 import { WishList } from '../pages/WishList';
 import { CartList } from '../pages/CartList';
-
+import { ConectionError } from '../pages/ConectionError';
 
 export const RouterList = () => {
 
@@ -18,10 +18,11 @@ export const RouterList = () => {
     return useRoutes([
         {path: '*', element: <NotFound />},
         {path: '/', element: <Home />},
+        {path: '/reconnection', element: <ConectionError />},
         {path: '/signin', element: <Signin />},
         {path: '/validateaccount', element: <ValidateAccount />},
         {path: '/wishlist', element: isLogin.status ? <WishList /> : <Signin />},
         {path: '/product/:id', element: <Product />},
-        {path: '/cart', element: isLogin.status ? <CartList /> : <Signin />}
+        {path: '/cart', element: isLogin.status ? <CartList /> : <Signin />},
     ]);
 };

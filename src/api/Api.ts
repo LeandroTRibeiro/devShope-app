@@ -1,9 +1,11 @@
 import axios from "axios";
-import { delCookie, setCookie } from "../helpers/Cookie";
+
+import { setCookie } from "../helpers/Cookie";
 
 const BASEAPI = 'http://localhost:2000';
 
 export const Api = {
+    
     signin: async (email: string, password: string) => {
 
         const response = await axios.post(`${BASEAPI}/user/signin`, {
@@ -32,11 +34,11 @@ export const Api = {
         return response.data;
     },
     products: async () => {
-        const response = await axios.get(`${BASEAPI}/ad/getlist`);
-
+        const response = await axios.get(`${BASEAPI}/products/getlist`);
         return response.data;
     },
     addWish: async (token: string, wish: string) => {
+        
         const response = await axios.post(`${BASEAPI}/user/add/wish`, {
             token,
             wish

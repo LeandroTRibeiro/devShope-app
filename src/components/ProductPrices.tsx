@@ -1,7 +1,9 @@
-import { ProductItem, ProductPriceType } from "../types/types"
+import { ProductPriceProps } from "../types/types";
+
 import { Format } from "../helpers/FormatPrice";
 
-export const ProductPrice = (Props: ProductPriceType) => {
+export const ProductPrice = (Props: ProductPriceProps) => {
+
     return (
         <>
             {Props.product.discount > 0 &&

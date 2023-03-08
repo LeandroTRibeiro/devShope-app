@@ -1,9 +1,10 @@
-import { Menu } from "./Menu";
+import { useAppSelector } from "../redux/hooks/useAppSelector";
 
 import { Link } from 'react-router-dom';
 
+import { Menu } from "./Menu";
+
 import { UserCircleIcon, ShoppingCartIcon, MagnifyingGlassIcon, HeartIcon } from '@heroicons/react/24/outline';
-import { useAppSelector } from "../redux/hooks/useAppSelector";
 
 export const Header = () => {
 
@@ -25,29 +26,29 @@ export const Header = () => {
             <div className="mr-1 flex">
                 {isLoin.status &&
                     <>
-                    <Link to='/wishlist'>
-                        {wishList.length === 0 &&
-                            <HeartIcon className="w-7 text-stone-800" />
-                                
-                        }
-                        {wishList.length > 0 &&
-                            <div className="flex justify-center items-center">
-                                <HeartIcon className="w-7 text-stone-800 fill-stone-800" />
-                                <span className="absolute text-xs text-white">{wishList.length}</span>
-                            </div>
-                        }
-                    </Link>
-                    <Link to='/cart'>
-                        {cartList.length === 0 &&
-                            <ShoppingCartIcon className="w-7 text-stone-800" />
-                        }
-                        {cartList.length > 0 &&
-                            <div className="flex justify-center items-center">
-                                <ShoppingCartIcon className="w-7 text-stone-800 fill-stone-800" />
-                                <span className="absolute text-xs text-white">{cartList.length}</span>
-                            </div>
-                        }
-                    </Link>
+                        <Link to='/wishlist'>
+                            {wishList.length === 0 &&
+                                <HeartIcon className="w-7 text-stone-800" />
+                                    
+                            }
+                            {wishList.length > 0 &&
+                                <div className="flex justify-center items-center">
+                                    <HeartIcon className="w-7 text-stone-800 fill-stone-800" />
+                                    <span className="absolute text-xs text-white">{wishList.length}</span>
+                                </div>
+                            }
+                        </Link>
+                        <Link to='/cart'>
+                            {cartList.length === 0 &&
+                                <ShoppingCartIcon className="w-7 text-stone-800" />
+                            }
+                            {cartList.length > 0 &&
+                                <div className="flex justify-center items-center">
+                                    <ShoppingCartIcon className="w-7 text-stone-800 fill-stone-800" />
+                                    <span className="absolute text-xs text-white">{cartList.length}</span>
+                                </div>
+                            }
+                        </Link>
                     </>
                 }
                 {!isLoin.status &&

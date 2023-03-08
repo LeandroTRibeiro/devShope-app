@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useDispatch } from "react-redux";
-
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Api } from "../api/Api";
 
@@ -10,13 +8,13 @@ import { Header } from "../components/Header";
 import { Loader } from "../components/Loader";
 import { Slides } from "../components/Slides";
 import { IsWish } from "../components/IsWish";
-
-import { Format } from "../helpers/FormatPrice";
-
-import { ProductItem } from "../types/types";
 import { ProductPrice } from "../components/ProductPrices";
 
+import { ProductItem } from "../types/types";
+
 export const Home = () => {
+
+    const navigate = useNavigate();
 
     const [productList, setProductList] = useState<ProductItem[]>([]);
 
@@ -27,15 +25,25 @@ export const Home = () => {
     },[])
 
     const products = async () => {
+
         setLoading(true);
-        const response = await Api.products();
-        setLoading(false);
-        setProductList(response.ads);
-        
+
+        try {
+
+            const response = await Api.products();
+            setLoading(false);
+            setProductList(response.ads);
+
+        } catch(error) {
+
+            setLoading(false);
+            navigate('/reconnection');
+
+        }
     }
 
     return (
-        <div className="">
+        <div>
             <Header />
             <Slides />
             <div className="bg-stone-100 overflow-x-hidden p-3">

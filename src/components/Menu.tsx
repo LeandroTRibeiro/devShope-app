@@ -1,16 +1,20 @@
-import { ArrowLeftOnRectangleIcon, ArrowRightOnRectangleIcon, HeartIcon, HomeIcon, ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { delCookie } from "../helpers/Cookie";
-import { useAppSelector } from "../redux/hooks/useAppSelector";
+
 import { setStatus } from "../redux/reducers/isLogin";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../redux/hooks/useAppSelector";
+
+import { Link } from "react-router-dom";
+
+import { delCookie } from "../helpers/Cookie";
+
+import { ArrowLeftOnRectangleIcon, ArrowRightOnRectangleIcon, HeartIcon, HomeIcon, ShoppingCartIcon, UserIcon } from "@heroicons/react/24/outline";
 
 export const Menu = () => {
 
     const dispatch = useDispatch();
 
-    const isLogin = useAppSelector(state => state.isLogin);
+    const isLogin = useAppSelector(state => state.isLogin.status);
 
     const [menu, setMenu] = useState(false);
 
@@ -39,14 +43,14 @@ export const Menu = () => {
                     <HomeIcon className={'w-5 text-stone-800'} />
                     Início
                 </Link>
-                {!isLogin.status &&
+                {!isLogin &&
                     <Link to='/signin' className={'flex gap-5 p-5 hover:bg-primary-focus transition-all ease-in-out duration-300 hover:scale-x-[1.02]'}>
                         <ArrowRightOnRectangleIcon className={'w-5 text-stone-800'} />
                         Entrar
                     </Link>
                 }
 
-                {isLogin.status &&
+                {isLogin &&
                     <div>
                         <Link to='/wishlist' className={'flex gap-5 p-5 hover:bg-primary-focus transition-all ease-in-out duration-300 hover:scale-x-[1.02]'}>
                             <HeartIcon className={'w-5 text-stone-800'} />
